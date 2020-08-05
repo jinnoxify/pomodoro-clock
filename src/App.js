@@ -1,26 +1,89 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import BreakInterval from "./components/Break";
+import SessionInterval from "./components/Session";
+import Timer from "./components/Timer";
+import "./App.css";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor() {
+    super();
+
+    this.state = {
+      breakInterval: 5,
+      sessionInterval: 25,
+      timerMinute: 25,
+      isPlay: false,
+    };
+
+    this.onBreakIntervalChange = this.onBreakIntervalChange.bind(this);
+    this.onSessionIntervalChange = this.onSessionIntervalChange.bind(this);
+    this.onTimerMinuteChange = this.onTimerMinuteChange.bind(this);
+    this.onPlayChange = this.onPlayChange.bind(this);
+    this.onResetTimer = this.onResetTimer.bind(this);
+  }
+
+  onPlayChange(isPlay) {
+    this.setState({
+      isPlay: isPlay,
+    });
+  }
+
+  onBreakIntervalChange(newBreakLength) {
+    this.setState({
+      breakInterval: newBreakLength,
+    });
+  }
+
+  onSessionIntervalChange(newSessionLength) {
+    this.setState({
+      sessionInterval: newSessionLength,
+      timerMinute: newSessionLength,
+    });
+  }
+
+  onTimerMinuteChange(minuteChange) {
+    this.setState({
+      timerMinute: minuteChange,
+    });
+  }
+
+  onResetTimer() {
+    this.setState({
+      sessionInterval: 25,
+      timerMinute: 25,
+      breakInterval: 5,
+    });
+  }
+
+  render() {
+    return (
+      <main className="App">
+        <section className="container">
+          <h2 className="app-title">Pomodoro Clock</h2>
+          <section id="interval-container">
+            <BreakInterval
+              onBreakIntervalChange={this.onBreakIntervalChange}
+              breakInterval={this.state.breakInterval}
+              isPlay={this.state.isPlay}
+            />
+            <SessionInterval
+              onSessionIntervalChange={this.onSessionIntervalChange}
+              sessionInterval={this.state.sessionInterval}
+              isPlay={this.state.isPlay}
+            />
+          </section>
+          <Timer
+            sessionInterval={this.state.sessionInterval}
+            timerMinute={this.state.timerMinute}
+            onTimerMinuteChange={this.onTimerMinuteChange}
+            breakInterval={this.state.breakInterval}
+            onPlayChange={this.onPlayChange}
+            resetTimer={this.onResetTimer}
+          />
+        </section>
+      </main>
+    );
+  }
 }
 
 export default App;
